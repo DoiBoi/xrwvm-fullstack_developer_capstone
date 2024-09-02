@@ -33,6 +33,8 @@ class CarMake(models.Model):
 # - __str__ method to print a car make object
 
 class CarModel(models.Model):
+    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)  # Many-to-One relationship
+    name = models.CharField(max_length=100)
     SEDAN = "Sedan"
     SUV = "SUV"
     WAGON = "Wagon"
@@ -41,7 +43,7 @@ class CarModel(models.Model):
     COUPE = "Coupe"
     TRUCK = "Truck"
 
-    CAR_TYPES = [
+    CAR_TYPE_CHOICES = [
         (SEDAN, "Sedan"),
         (SUV, "SUV"),
         (WAGON, "Wagon"),
@@ -50,16 +52,16 @@ class CarModel(models.Model):
         (COUPE, "Coupe"),
         (TRUCK, "Truck"),
     ]
-
-    car_make = models.ForeignKey(
-        CarMake, on_delete=models.CASCADE
-    )  # Many-to-one relationship
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=20, choices=CAR_TYPES, default="SUV")
-    year = models.IntegerField(default=2024, 
-            validators=[
-            MaxValueValidator(2024),
+    type = models.CharField(max_length=20, choices=CAR_TYPE_CHOICES, default='SUV')
+    year = models.IntegerField(default=2023,
+        validators=[
+            MaxValueValidator(2023),
             MinValueValidator(2015)
         ])
-    color = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    color = models.CharField(max_length=50, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    # Other fields as needed
+
+    def __str__(self):
+        return self.name  # Return the name as the string representation
+
